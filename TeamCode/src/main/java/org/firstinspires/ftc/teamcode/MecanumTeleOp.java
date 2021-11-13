@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -52,6 +54,11 @@ public class MecanumTeleOp extends LinearOpMode
     private double left_stick_y2; // Remember, this is reversed!
     private double left_stick_x2; // Counteract imperfect strafing
     private double right_stick_x2;
+    private boolean dpad_up;
+    private boolean dpad_down;
+
+    private BNO055IMU imu = null;
+    private final boolean fieldCentric = true;
 
     public void HandleInput()
     {
@@ -66,6 +73,8 @@ public class MecanumTeleOp extends LinearOpMode
         left_stick_y1 = -gamepad1.left_stick_y; // Remember, this is reversed!
         left_stick_x1 = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         right_stick_x1 = gamepad1.right_stick_x;
+        dpad_up = gamepad2.dpad_up;
+        dpad_down = gamepad2.dpad_down;
 
         a2 = gamepad2.a;
         b2 = gamepad2.b;
@@ -119,6 +128,11 @@ public class MecanumTeleOp extends LinearOpMode
             SetTeam(x1, b1);
         }
 
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters imuParms = new BNO055IMU.Parameters();
+        imuParms.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(imuParms);
+
         waitForStart();
         runtime.reset();
 
@@ -128,10 +142,12 @@ public class MecanumTeleOp extends LinearOpMode
         {
             HandleInput();
             MecanumDrive(left_stick_y1, left_stick_x1, right_stick_x1, right_bumper1, left_bumper1);
-            Arm(a2, b2, x2, left_bumper2, right_bumper2, left_trigger2, right_trigger2);
+            Arm(a2, b2, x2, left_bumper2, right_bumper2, dpad_up, dpad_down);
             Grabber(right_bumper2);
             Intake(right_trigger2, left_trigger2);
             DuckyWheel(left_stick_y2);
+            telemetry.update();
+
         }
     }
 
@@ -143,58 +159,65 @@ public class MecanumTeleOp extends LinearOpMode
         motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    private void Arm(boolean a, boolean b, boolean x, boolean stop1, boolean stop2, float manualUp, float manualDn)
+    private void Arm(boolean a, boolean b, boolean x, boolean stop1, boolean stop2, boolean manualUp, boolean manualDn)
     {
         ///////////////// Arm //////////////////////////
         if (a)// arm moves to the high level
         {
-            //motorArm.setPower(1);
             ArmMoveTo(2000);
         }
         if (b)// arm moves to the middle level
         {
-            //motorArm.setPower(-1);
-
             ArmMoveTo(1000);
         }
-        if (x)//arm moves back to start
+//        if (x)//arm moves back to start
+//        {
+//            motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            if(limitSwitch.getState())
+//            {
+//                motorArm.setPower(-0.5);
+//                motorArm.setMode(DcMotor.RunMode.RESET_ENCODERS);
+//
+//            }
+//
+//            motorArm.setPower(0);
+//            motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        }
+        if (manualUp)
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (limitSwitch.getState())
-            {
-                motorArm.setPower(-0.5);
-            }
-
-            motorArm.setPower(0);
-            motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorArm.setPower(0.5);
         }
-        if (manualUp > 0)
+        else if (manualDn  && limitSwitch.getState())
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorArm.setPower(manualUp);
-        }
-        else if (manualDn > 0 && limitSwitch.getState())
-        {
-            motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorArm.setPower(manualDn * -1);
+            motorArm.setPower(-0.5);
         }
         else if (!limitSwitch.getState())
         {
             motorArm.setPower(0);
+            motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         if (stop1 || stop2)
         {
             motorArm.setPower(0);
         }
 
+        telemetry.addData("Arm ", "Position: %d", motorArm.getCurrentPosition());
 
     }
 
     public void InitArm()
     {
+        motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorArm.setPower(-1);
+
         while (limitSwitch.getState() && !opModeIsActive())
         {
-            motorArm.setPower(-1);
+            telemetry.addData("Init arm", "Switch value: %s",limitSwitch.getState() );
+            telemetry.addData("Init arm ", "Position: %d", motorArm.getCurrentPosition());
+            telemetry.addData("Init arm ", "Time: %f", getRuntime());
+            telemetry.update();
         }
         //hi
         //temp
@@ -205,12 +228,12 @@ public class MecanumTeleOp extends LinearOpMode
     private void Grabber(boolean right_bumper)
     {
         ///////////////// Grabber ////////////////////
-        if (right_bumper)
-        { //grabber ungrab
+        if (right_bumper)//grabber ungrab
+        {
             servoGrabber.setPosition(0);
         }
-        else
-        {  //grabber grab
+        else //grabber grab
+        {
             servoGrabber.setPosition(0.15);
         }
     }
@@ -218,11 +241,11 @@ public class MecanumTeleOp extends LinearOpMode
     private void Intake(float right_trigger, float left_trigger)
     {
         ////////////////////intake//////////////////////
-        if (right_trigger >= 0.2) //Makes intake go forward
+        if (right_trigger >= 0.1) //Makes intake go forward
         {
             servoIntake.setPower(1);
         }
-        else if (left_trigger >= 0.2) //Makes intake go rewerse
+        else if (left_trigger >= 0.1) //Makes intake go rewerse
         {
             servoIntake.setPower(-1);
         }
@@ -258,6 +281,16 @@ public class MecanumTeleOp extends LinearOpMode
         {
             speedMultiplier = 0.25f;
         }
+        if (fieldCentric) {
+            double angle = -imu.getAngularOrientation().firstAngle;
+            telemetry.addData("Heading", "%f", angle);
+
+            // From https://www.ctrlaltftc.com/practical-examples/drivetrain-control
+            double x_rotated = x * Math.cos(angle) - y * Math.sin(angle);
+            double y_rotated = x * Math.sin(angle) + y * Math.cos(angle);
+            x = x_rotated;
+            y = y_rotated;
+        }
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = ((y + x + rx) / denominator) * speedMultiplier;
         double backLeftPower = ((y - x + rx) / denominator) * speedMultiplier;
@@ -270,10 +303,9 @@ public class MecanumTeleOp extends LinearOpMode
         motorBackRight.setPower(backRightPower);
 
         double pos1 = servoGrabber.getPosition();
-        telemetry.addData("Test", "1, position: 1-%f", pos1);
+        telemetry.addData("Test","1, position: 1-%f", pos1);
         telemetry.update();
     }
-
     private void SetTeam(boolean x, boolean b)
     {
         telemetry.addData("Driver, please select a team. Current team: ", "%c", team);
