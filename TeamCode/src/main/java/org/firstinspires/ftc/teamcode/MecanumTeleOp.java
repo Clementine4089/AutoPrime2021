@@ -1,24 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
-
-@TeleOp(name="AutoPrime Mecanum TeleOp", group="Linear Opmode")
+@TeleOp(name = "AutoPrime Mecanum TeleOp", group = "Linear Opmode")
 
 public class MecanumTeleOp extends LinearOpMode
 {
     public char team = '-';
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor motorFrontLeft = null;
     private DcMotor motorBackLeft = null;
     private DcMotor motorFrontRight = null;
@@ -68,7 +66,7 @@ public class MecanumTeleOp extends LinearOpMode
         left_stick_y1 = -gamepad1.left_stick_y; // Remember, this is reversed!
         left_stick_x1 = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         right_stick_x1 = gamepad1.right_stick_x;
-        
+
         a2 = gamepad2.a;
         b2 = gamepad2.b;
         x2 = gamepad2.x;
@@ -162,7 +160,7 @@ public class MecanumTeleOp extends LinearOpMode
         if (x)//arm moves back to start
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while(limitSwitch.getState())
+            while (limitSwitch.getState())
             {
                 motorArm.setPower(-0.5);
             }
@@ -175,7 +173,7 @@ public class MecanumTeleOp extends LinearOpMode
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorArm.setPower(manualUp);
         }
-        else if (manualDn > 0  && limitSwitch.getState())
+        else if (manualDn > 0 && limitSwitch.getState())
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorArm.setPower(manualDn * -1);
@@ -194,7 +192,7 @@ public class MecanumTeleOp extends LinearOpMode
 
     public void InitArm()
     {
-        while(limitSwitch.getState() && !opModeIsActive())
+        while (limitSwitch.getState() && !opModeIsActive())
         {
             motorArm.setPower(-1);
         }
@@ -207,12 +205,12 @@ public class MecanumTeleOp extends LinearOpMode
     private void Grabber(boolean right_bumper)
     {
         ///////////////// Grabber ////////////////////
-        if (right_bumper)//grabber ungrab
-        {
+        if (right_bumper)
+        { //grabber ungrab
             servoGrabber.setPosition(0);
         }
-        else //grabber grab
-        {
+        else
+        {  //grabber grab
             servoGrabber.setPosition(0.15);
         }
     }
@@ -261,10 +259,10 @@ public class MecanumTeleOp extends LinearOpMode
             speedMultiplier = 0.25f;
         }
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = ((y + x + rx) / denominator)*speedMultiplier;
-        double backLeftPower = ((y - x + rx) / denominator)*speedMultiplier;
-        double frontRightPower = ((y + x - rx) / denominator)*speedMultiplier;
-        double backRightPower = ((y - x - rx) / denominator)*speedMultiplier;
+        double frontLeftPower = ((y + x + rx) / denominator) * speedMultiplier;
+        double backLeftPower = ((y - x + rx) / denominator) * speedMultiplier;
+        double frontRightPower = ((y + x - rx) / denominator) * speedMultiplier;
+        double backRightPower = ((y - x - rx) / denominator) * speedMultiplier;
 
         motorFrontLeft.setPower(frontLeftPower);
         motorBackLeft.setPower(backLeftPower);
@@ -272,9 +270,10 @@ public class MecanumTeleOp extends LinearOpMode
         motorBackRight.setPower(backRightPower);
 
         double pos1 = servoGrabber.getPosition();
-        telemetry.addData("Test","1, position: 1-%f", pos1);
+        telemetry.addData("Test", "1, position: 1-%f", pos1);
         telemetry.update();
     }
+
     private void SetTeam(boolean x, boolean b)
     {
         telemetry.addData("Driver, please select a team. Current team: ", "%c", team);
