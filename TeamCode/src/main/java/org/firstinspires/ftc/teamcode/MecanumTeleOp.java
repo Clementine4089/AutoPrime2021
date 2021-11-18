@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -143,9 +144,10 @@ public class MecanumTeleOp extends LinearOpMode
             HandleInput();
             MecanumDrive(left_stick_y1, left_stick_x1, right_stick_x1, right_bumper1, left_bumper1);
             Arm(a2, b2, x2, left_bumper2, right_bumper2, dpad_up, dpad_down);
-            Grabber(right_bumper2);
+            Grabber(right_bumper2,left_bumper2);
             Intake(right_trigger2, left_trigger2);
             DuckyWheel(left_stick_y2);
+            //OutTake(y2);
             telemetry.update();
 
         }
@@ -164,25 +166,12 @@ public class MecanumTeleOp extends LinearOpMode
         ///////////////// Arm //////////////////////////
         if (a)// arm moves to the high level
         {
-            ArmMoveTo(2000);
+            ArmMoveTo(3100);
         }
-        if (b)// arm moves to the middle level
+        if (b)// arm moves to the Low Level
         {
-            ArmMoveTo(1000);
+            ArmMoveTo(3800);
         }
-//        if (x)//arm moves back to start
-//        {
-//            motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            if(limitSwitch.getState())
-//            {
-//                motorArm.setPower(-0.5);
-//                motorArm.setMode(DcMotor.RunMode.RESET_ENCODERS);
-//
-//            }
-//
-//            motorArm.setPower(0);
-//            motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        }
         if (manualUp)
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -225,14 +214,14 @@ public class MecanumTeleOp extends LinearOpMode
         motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    private void Grabber(boolean right_bumper)
+    private void Grabber(boolean right_bumper, boolean left_bumper)
     {
         ///////////////// Grabber ////////////////////
         if (right_bumper)//grabber ungrab
         {
             servoGrabber.setPosition(0);
         }
-        else //grabber grab
+        if (left_bumper)
         {
             servoGrabber.setPosition(0.15);
         }
@@ -281,7 +270,17 @@ public class MecanumTeleOp extends LinearOpMode
         {
             speedMultiplier = 0.25f;
         }
-        if (fieldCentric) {
+        if (fieldCentric && team == 'b') {
+            double angle = -imu.getAngularOrientation().firstAngle-Math.PI/2;
+            telemetry.addData("Heading", "%f", angle);
+
+            // From https://www.ctrlaltftc.com/practical-examples/drivetrain-control
+            double x_rotated = x * Math.cos(angle) - y * Math.sin(angle);
+            double y_rotated = x * Math.sin(angle) + y * Math.cos(angle);
+            x = x_rotated;
+            y = y_rotated;
+        }
+        else if (fieldCentric){
             double angle = -imu.getAngularOrientation().firstAngle;
             telemetry.addData("Heading", "%f", angle);
 

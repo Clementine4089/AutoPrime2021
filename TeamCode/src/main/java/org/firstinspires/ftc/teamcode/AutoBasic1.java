@@ -87,7 +87,7 @@ public class AutoBasic1 extends LinearOpMode {
     private BNO055IMU imu = null;
     private final boolean fieldCentric = true;
 
-    private boolean Team = true; // true = blue, false = red
+    private boolean Team = true; // false = blue, true = red
 
     @Override
     public void runOpMode() {
@@ -128,14 +128,57 @@ public class AutoBasic1 extends LinearOpMode {
         imu.initialize(imuParms);
 
         waitForStart();
-            // InitArm();
-            driveForTicks(0.5, 0.0, 0, 300); //- left +right
-            driveForTicks(0, -0.5, 0, -1500); //- left +right
-            driveForTicks(-0.5, 0.0, 0, -100); //- left +right
-            DuckyWheelMoveTo(5, 5000);
-            driveForTicks(0.5, 0.0, 0, 600); //- left +right
-            //movebackforw()
+//            // InitArm();
+//            driveForTicks(0.3, 0.0, 0, 300); //- left +right
+//            driveForTicks(0, -0.3, 0, -1500); //- left +right
+//            driveForTicks(-0.3, 0.0, 0, -200); //- left +right
+//            DuckyWheelMoveTo(5, 5000);
+//            driveForTicks(0.3, 0.0, 0, 700); //- left +right
+//            //movebackforw()
             //moveTo
+    }
+    public void initTeam(boolean t){
+        Team = t;
+    }
+    public void setupOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        motorFrontLeft = hardwareMap.dcMotor.get("LeftFrontMotor");
+        motorBackLeft = hardwareMap.dcMotor.get("LeftBackMotor");
+        motorFrontRight = hardwareMap.dcMotor.get("RightFrontMotor");
+        motorBackRight = hardwareMap.dcMotor.get("RightBackMotor");
+        motorArm = hardwareMap.dcMotor.get("ArmMotor");
+        motorDuckyWheel = hardwareMap.dcMotor.get("DuckyWheelMotor");
+        servoIntake = hardwareMap.get(CRServo.class, "IntakeServo");
+        servoGrabber = hardwareMap.get(Servo.class, "GrabberServo");
+
+        limitSwitch = hardwareMap.get(DigitalChannel.class, "LimitSwitch0");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorDuckyWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters imuParms = new BNO055IMU.Parameters();
+        imuParms.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu.initialize(imuParms);
+
+        waitForStart();
+//
+
     }
     public void driveForTime(double y, double x, double rx, double time)
     {
@@ -258,7 +301,7 @@ public class AutoBasic1 extends LinearOpMode {
 
     }
 
-    private void DuckyWheelMoveTo(double speed, double ticks)
+    public void DuckyWheelMoveTo(double speed, double ticks)
     {
         motorDuckyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         boolean positiveDir = ticks > 0;
