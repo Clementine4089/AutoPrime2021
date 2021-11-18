@@ -123,11 +123,12 @@ public class MecanumTeleOp extends LinearOpMode
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         InitArm();
-        while (!teamSelected)
+        while (!teamSelected && !isStopRequested())
         {
             HandleInput();
             SetTeam(x1, b1);
         }
+        if (isStopRequested()) return;
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters imuParms = new BNO055IMU.Parameters();
@@ -137,7 +138,7 @@ public class MecanumTeleOp extends LinearOpMode
         waitForStart();
         runtime.reset();
 
-        if (isStopRequested()) return;
+
 
         while (opModeIsActive())
         {
