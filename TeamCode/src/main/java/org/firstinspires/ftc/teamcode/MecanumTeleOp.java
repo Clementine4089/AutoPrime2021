@@ -158,7 +158,7 @@ public class MecanumTeleOp extends LinearOpMode
     {
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorArm.setTargetPosition(position);
-        motorArm.setPower(0.5);
+        motorArm.setPower(0.8);
         motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
@@ -176,12 +176,12 @@ public class MecanumTeleOp extends LinearOpMode
         if (manualUp)
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorArm.setPower(0.5);
+            motorArm.setPower(0.8);
         }
         else if (manualDn  && limitSwitch.getState())
         {
             motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorArm.setPower(-0.5);
+            motorArm.setPower(-0.8);
         }
         else if (!limitSwitch.getState())
         {
