@@ -90,7 +90,8 @@ public class AutoBasic1 extends LinearOpMode {
     private boolean Team = true; // false = blue, true = red
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException
+    {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -147,10 +148,12 @@ public class AutoBasic1 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        motorFrontLeft = hardwareMap.dcMotor.get("LeftFrontMotor");
+       /* motorFrontLeft = hardwareMap.dcMotor.get("LeftFrontMotor");
         motorBackLeft = hardwareMap.dcMotor.get("LeftBackMotor");
         motorFrontRight = hardwareMap.dcMotor.get("RightFrontMotor");
         motorBackRight = hardwareMap.dcMotor.get("RightBackMotor");
+        */
+
         motorArm = hardwareMap.dcMotor.get("ArmMotor");
         motorDuckyWheel = hardwareMap.dcMotor.get("DuckyWheelMotor");
         servoIntake = hardwareMap.get(CRServo.class, "IntakeServo");
@@ -159,13 +162,14 @@ public class AutoBasic1 extends LinearOpMode {
         limitSwitch = hardwareMap.get(DigitalChannel.class, "LimitSwitch0");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+      /*  motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         motorArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        */
         motorDuckyWheel.setDirection(DcMotorSimple.Direction.FORWARD);
-
+/*
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -175,7 +179,7 @@ public class AutoBasic1 extends LinearOpMode {
         BNO055IMU.Parameters imuParms = new BNO055IMU.Parameters();
         imuParms.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         imu.initialize(imuParms);
-
+*/
         waitForStart();
 //
 
@@ -357,7 +361,7 @@ public class AutoBasic1 extends LinearOpMode {
         double pos1 = servoGrabber.getPosition();
         telemetry.addData("Test","1, position: 1-%f", pos1);
     }
-    private void Grabber(boolean right_bumper)
+    void Grabber(boolean right_bumper)
     {
         ///////////////// Grabber ////////////////////
         if (right_bumper)//grabber ungrab
@@ -370,7 +374,7 @@ public class AutoBasic1 extends LinearOpMode {
         }
     }
 
-    private void Intake(float right_trigger, float left_trigger)
+    void Intake(float right_trigger, float left_trigger)
     {
         ////////////////////intake//////////////////////
         if (right_trigger >= 0.1) //Makes intake go forward
