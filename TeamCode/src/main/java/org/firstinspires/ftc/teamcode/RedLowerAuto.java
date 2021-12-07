@@ -1,27 +1,50 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name=" RedLower Auto", group="Linear OpMode")
-public class RedLowerAuto extends AutoBasic1 {
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
+@Autonomous(name = "RedLowerAuto")
+public class RedLowerAuto extends AutoBasic1
+{
+
+    SampleMecanumDrive drive;
 
     @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    public void runOpMode() throws InterruptedException
+    {
+        drive = new SampleMecanumDrive(hardwareMap);
+        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(270)));
+        waitForStart();
 
-        initTeam(true); // Red = true
+        while (opModeIsActive() && !isStopRequested())
+        {
+            initTeam(true);
 
-        setupOpMode();
+            setupOpMode();
 
-        driveForTicks(0.4, 0.0, 0, 300); //- left +right
-        driveForTicks(0, -0.5, 0, -1500); //- left +right
-        driveForTicks(-0.4, 0.0, 0, -300); //- left +right
-        driveForTicks(-0.1, 0.0, 0, -100); //- left +right
-        DuckyWheelMoveTo(5, 10000);
-        driveForTicks(0.5, 0.0, 0, 650); //- left +right
-        //driveForTicks(0.0, 0.2, 0, 100); //- left +right
+            GrabberMove(true);
+            drive.followTrajectory(AutoPaths.RT_traj1);
+            ArmMoveTo(3100);
+            drive.followTrajectory(AutoPaths.RT_traj2);
+            sleep(1500);
+            GrabberMove(false);
+            IntakeMove(1);
+            sleep(500);
+            IntakeMove(0);
+            ArmMoveTo(0);
+            drive.followTrajectory(AutoPaths.RT_traj3);
+            DuckyWheelMoveTo(5, 10000);
+            drive.followTrajectory(AutoPaths.RT_traj4);
+            drive.followTrajectory(AutoPaths.RT_traj5);
+
+
+            break;
+        }
+
+
+        requestOpModeStop();
     }
-
-
 }
