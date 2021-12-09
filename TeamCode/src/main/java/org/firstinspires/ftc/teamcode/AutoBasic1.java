@@ -182,16 +182,20 @@ public class AutoBasic1 extends LinearOpMode {
         ////////////////////intake//////////////////////
         if (speed > 0) //Makes intake go forward
         {
-            servoIntake.setPower(speed);
+            servoIntake.setPower(-speed);
         }
         else if (speed < 0) //Makes intake go rewerse
         {
-            servoIntake.setPower(speed);
+            servoIntake.setPower(-speed);
         }
         else// stops intake
         {
             servoIntake.setPower(0);
         }
+    }
+    void initArm() //for initializing the arm encouders at the beginning of each auto
+    {
+        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
 }

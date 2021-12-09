@@ -31,7 +31,7 @@ public class RedLowerAuto extends AutoBasic1
             drive.followTrajectory(AutoPaths.RT_traj2);
             sleep(1500);
             GrabberMove(false);
-            IntakeMove(1);
+            IntakeMove(-1);
             sleep(500);
             IntakeMove(0);
             ArmMoveTo(0);

@@ -16,7 +16,7 @@ public class BlueLowerAuto extends AutoBasic1
     public void runOpMode() throws InterruptedException
     {
         drive = new SampleMecanumDrive(hardwareMap);
-        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(270)));
+        drive.setPoseEstimate(new Pose2d(0,0, Math.toRadians(90)));
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested())
@@ -26,19 +26,19 @@ public class BlueLowerAuto extends AutoBasic1
             setupOpMode();
 
             GrabberMove(true);
-            drive.followTrajectory(AutoPaths.RT_traj1);
+            drive.followTrajectory(AutoPaths.RT_traj11);
             ArmMoveTo(3100);
-            drive.followTrajectory(AutoPaths.RT_traj2);
+            drive.followTrajectory(AutoPaths.RT_traj12);
             sleep(1500);
             GrabberMove(false);
-            IntakeMove(1);
+            IntakeMove(-1);
             sleep(500);
             IntakeMove(0);
             ArmMoveTo(0);
-            drive.followTrajectory(AutoPaths.RT_traj3);
-            DuckyWheelMoveTo(5, 10000);
-            drive.followTrajectory(AutoPaths.RT_traj4);
-            drive.followTrajectory(AutoPaths.RT_traj5);
+            drive.followTrajectory(AutoPaths.RT_traj13);
+            DuckyWheelMoveTo(-5, -10000);
+            drive.followTrajectory(AutoPaths.RT_traj14);
+            drive.followTrajectory(AutoPaths.RT_traj15);
 
 
             break;
