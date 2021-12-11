@@ -148,6 +148,7 @@ public class MecanumTeleOp extends LinearOpMode
             Grabber(right_bumper2,left_bumper2);
             Intake(right_trigger2, left_trigger2);
             DuckyWheel(left_stick_y2);
+            SpinOneDuck();
             //OutTake(y2);
             telemetry.update();
 
@@ -253,6 +254,30 @@ public class MecanumTeleOp extends LinearOpMode
             motorDuckyWheel.setPower(input * multiplier);
         else
             motorDuckyWheel.setPower(input * multiplier * -1);
+
+    }
+    public void DuckyWheelMoveTo(double speed, double ticks)
+    {
+        motorDuckyWheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean positiveDir = ticks > 0;
+        double endTicks = motorDuckyWheel.getCurrentPosition() + ticks;
+        while (opModeIsActive() &&
+                ((positiveDir == true && motorDuckyWheel.getCurrentPosition() < endTicks) ||
+                        (positiveDir == false && motorDuckyWheel.getCurrentPosition() > endTicks))) {
+            ////////////////////// Ducky Wheel ///////////////////////////
+            if (team == 'r')
+                motorDuckyWheel.setPower(speed);
+            else
+                motorDuckyWheel.setPower(speed * -1);
+        }
+        motorDuckyWheel.setPower(0);
+
+    }
+    public void SpinOneDuck(){
+
+        if(gamepad2.y){
+            DuckyWheelMoveTo(5, 5000);
+        }
 
     }
 
