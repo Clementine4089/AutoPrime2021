@@ -25,12 +25,13 @@ public class RedUpperAuto extends AutoBasic1
             setupOpMode();
             initArm();
 
+
             /// step 1 ///
             GrabberMove(true);
             drive.followTrajectory(AutoPaths.RT_traj21); //moves slightly towards the goal
-            ArmMoveTo(3150);
+            ArmMoveTo(3150); //3150
             drive.followTrajectory(AutoPaths.RT_traj22); //moves to the goal ready to place the element
-            sleep(1200);
+            sleep(1700);
             GrabberMove(false);
             IntakeMove(-1);
             sleep(500);
@@ -38,8 +39,9 @@ public class RedUpperAuto extends AutoBasic1
             ArmMoveTo(0);
             drive.followTrajectory(AutoPaths.RT_traj23); //drives to the wall
             IntakeMove(1);
+            sleep(300);
             drive.followTrajectory(AutoPaths.RT_traj24); //drives to the hub to pick up an element
-            sleep(2000);
+            sleep(1800);
             IntakeMove(0);
             GrabberMove(true);
 
@@ -56,6 +58,7 @@ public class RedUpperAuto extends AutoBasic1
             drive.followTrajectory(AutoPaths.RT_traj27); //drives to the wall
             IntakeMove(1);
             drive.followTrajectory(AutoPaths.RT_traj28); //drives to the hub ready to pick up an element
+            drive.followTrajectory(AutoPaths.RT_traj213); //drives slower to be ready to pick up element
             sleep(2000);
             IntakeMove(0);
             GrabberMove(true);

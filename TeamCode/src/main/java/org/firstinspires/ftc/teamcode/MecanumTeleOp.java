@@ -224,7 +224,7 @@ public class MecanumTeleOp extends LinearOpMode
         }
         if (left_bumper)
         {
-            servoGrabber.setPosition(0.15);
+            servoGrabber.setPosition(0.2);
         }
     }
 

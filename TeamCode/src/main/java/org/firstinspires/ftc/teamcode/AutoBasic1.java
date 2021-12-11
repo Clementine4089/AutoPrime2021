@@ -32,6 +32,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+        import com.acmerobotics.dashboard.config.Config;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -70,7 +71,7 @@ package org.firstinspires.ftc.teamcode;
 
 @Autonomous(name="BasicAuto", group="Linear OpMode")
 
-
+@Config
 public class AutoBasic1 extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -85,6 +86,8 @@ public class AutoBasic1 extends LinearOpMode {
     private final boolean fieldCentric = true;
 
     private boolean Team = true; // false = blue, true = red
+    //public static int level = 0; // 1 = high goal, 2 = middle goal, 3 = high goal
+    //public static int testPos = 3400;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -197,5 +200,21 @@ public class AutoBasic1 extends LinearOpMode {
     {
         motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-
+    int initLevel(int level)
+    {
+        int armPos = 0;
+        if (level == 3){
+            armPos = 3850;
+        }
+        else if (level == 2){
+            armPos = 3625;
+        }
+        else if (level == 1){
+            armPos = 3200;
+        }
+        else {
+            //return testPos;
+        }
+        return armPos;
+    }
 }
