@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -265,7 +266,10 @@ public class MecanumTeleOp extends LinearOpMode
                 ((positiveDir == true && motorDuckyWheel.getCurrentPosition() < endTicks) ||
                         (positiveDir == false && motorDuckyWheel.getCurrentPosition() > endTicks))) {
             ////////////////////// Ducky Wheel ///////////////////////////
-            if (team == 'r')
+            FtcDashboard.getInstance().getTelemetry().addData("Current Ticks", motorDuckyWheel.getCurrentPosition());
+            FtcDashboard.getInstance().getTelemetry().addData("Target Ticks", endTicks);
+            FtcDashboard.getInstance().getTelemetry().update();
+            if (team == 'b')
                 motorDuckyWheel.setPower(speed);
             else
                 motorDuckyWheel.setPower(speed * -1);
@@ -274,10 +278,19 @@ public class MecanumTeleOp extends LinearOpMode
 
     }
     public void SpinOneDuck(){
-
+    
         if(gamepad2.y){
-            DuckyWheelMoveTo(5, 5000);
+            if (team == 'r')
+            {
+                DuckyWheelMoveTo(0.6, -675); // one rot =103.6
+                DuckyWheelMoveTo(1, -325);
+            }
+            else{
+                DuckyWheelMoveTo(0.6, 675); // one rot =103.6
+                DuckyWheelMoveTo(1, 325);
+            }
         }
+
 
     }
 

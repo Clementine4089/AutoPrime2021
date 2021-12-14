@@ -68,7 +68,7 @@ public class RedLowerAuto extends AutoBasic1
             IntakeMove(0);
             ArmMoveTo(0);
             drive.followTrajectory(AutoPaths.RT_traj3);
-            DuckyWheelMoveTo(5, 10000);
+            DuckyWheelMoveTo(-0.35, -1200);
             drive.followTrajectory(AutoPaths.RT_traj4);
             drive.followTrajectory(AutoPaths.RT_traj5);
 

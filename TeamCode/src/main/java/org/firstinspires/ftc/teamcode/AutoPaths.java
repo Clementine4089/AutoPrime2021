@@ -43,7 +43,7 @@ public class AutoPaths extends AutoBasic1
             .lineToSplineHeading(new Pose2d(-35, 24, Math.toRadians(100)))
             .build();
     public static Trajectory RT_traj5 = BuildTrajectory(RT_traj4.end())
-            .lineToSplineHeading(new Pose2d(-40, 24, Math.toRadians(100)))
+            .lineToSplineHeading(new Pose2d(-45, 24, Math.toRadians(100)))
             .build();
 
 
@@ -52,7 +52,7 @@ public class AutoPaths extends AutoBasic1
             .lineToSplineHeading(new Pose2d(0, -10, Math.toRadians(90)))
             .build();
     public static Trajectory RT_traj12 = BuildTrajectory(RT_traj11.end())
-            .lineToSplineHeading(new Pose2d(0, -24, Math.toRadians(135)))
+            .lineToSplineHeading(new Pose2d(10, -22, Math.toRadians(135)))
             .build();
     public static Trajectory RT_traj13 = BuildTrajectory(RT_traj12.end())
             .lineToSplineHeading(new Pose2d(-35, -4, Math.toRadians(0)))

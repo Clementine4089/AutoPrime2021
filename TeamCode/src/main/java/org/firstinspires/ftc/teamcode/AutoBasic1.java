@@ -159,10 +159,8 @@ public class AutoBasic1 extends LinearOpMode {
                 ((positiveDir == true && motorDuckyWheel.getCurrentPosition() < endTicks) ||
                         (positiveDir == false && motorDuckyWheel.getCurrentPosition() > endTicks))) {
             ////////////////////// Ducky Wheel ///////////////////////////
-            if (Team)
                 motorDuckyWheel.setPower(speed);
-            else
-                motorDuckyWheel.setPower(speed * -1);
+
         }
         motorDuckyWheel.setPower(0);
 
@@ -204,10 +202,10 @@ public class AutoBasic1 extends LinearOpMode {
     {
         int armPos = 0;
         if (level == 3){
-            armPos = 3850;
+            armPos = 3800;
         }
         else if (level == 2){
-            armPos = 3625;
+            armPos = 3550;
         }
         else if (level == 1){
             armPos = 3200;
