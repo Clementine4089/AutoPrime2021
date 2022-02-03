@@ -153,7 +153,7 @@ public class MecanumTeleOp extends LinearOpMode
         {
             HandleInput();
             MecanumDrive(left_stick_y1, left_stick_x1, right_stick_x1, right_bumper1, left_bumper1);
-            Arm(a2, b2, left_bumper2, right_bumper2, dpad_up, dpad_down, dpad_left, dpad_right);
+            Arm(a2, b2, x2, left_bumper2, right_bumper2, dpad_up, dpad_down, dpad_left, dpad_right);
             Grabber(right_bumper2,left_bumper2,x1,b1);
             Intake(right_trigger2, left_trigger2);
             DuckyWheel(left_stick_y2);
@@ -173,7 +173,7 @@ public class MecanumTeleOp extends LinearOpMode
         motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    private void Arm(boolean a, boolean b, boolean stop1, boolean stop2, boolean manualUp, boolean manualDn, boolean presetCapUp, boolean presetCapDown)
+    private void Arm(boolean a, boolean b, boolean x, boolean stop1, boolean stop2, boolean manualUp, boolean manualDn, boolean presetCapUp, boolean presetCapDown)
     {
         ///////////////// Arm //////////////////////////
         if (a)// arm moves to the high level
@@ -183,6 +183,9 @@ public class MecanumTeleOp extends LinearOpMode
         if (b)// arm moves to the Low Level
         {
             ArmMoveTo(3800);
+        }
+        if(x){
+            ArmMoveTo(3500);
         }
         if (manualUp)
         {
