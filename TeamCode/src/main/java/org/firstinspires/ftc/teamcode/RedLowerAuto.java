@@ -56,21 +56,41 @@ public class RedLowerAuto extends AutoBasic1
             initTeam(true);
             setupOpMode();
             initArm();
+            GrabberMove(true, true);
 
-            GrabberMove(true);
-            drive.followTrajectory(AutoPaths.RT_traj1);
+            drive.followTrajectory(AutoPaths.RT_traj1);// drives little ways off the wall
             ArmMoveTo(aP);
-            drive.followTrajectory(AutoPaths.RT_traj2);
-            sleep(2000);
-            GrabberMove(false);
-            IntakeMove(-1);
-            sleep(500);
-            IntakeMove(0);
-            ArmMoveTo(0);
-            drive.followTrajectory(AutoPaths.RT_traj3);
+            sleep(1000);
+            drive.followTrajectory(AutoPaths.RT_traj2); // drives to the goal ready to drop off an element
+            sleep(400);
+            GrabberMove(false, false);
+            sleep(300);
+            drive.followTrajectory(AutoPaths.RT_traj3);// moves little ways then moves towards teh ducky wheel
+            ArmMove();
+            drive.followTrajectory(AutoPaths.RT_traj6); // moves up to the ducky wheel
             DuckyWheelMoveTo(-0.35, -1200);
-            drive.followTrajectory(AutoPaths.RT_traj4);
-            drive.followTrajectory(AutoPaths.RT_traj5);
+            IntakeMove(0.63);
+            drive.followTrajectory(AutoPaths.RT_traj06);
+            drive.followTrajectory(AutoPaths.RT_traj7); //spins around, ready to pick up the duck
+            drive.followTrajectory(AutoPaths.RT_traj8);// drives up
+            drive.followTrajectory(AutoPaths.RT_traj04); // moves toward wall
+            drive.followTrajectory(AutoPaths.RT_traj9); //drives down
+            drive.followTrajectory(AutoPaths.RT_traj05); //moves toward wall
+            drive.followTrajectory(AutoPaths.RT_traj01); //drives up closer to wall, hopefully has a duck
+            IntakeMove(0.9);
+            sleep(1200);
+            DuckyGrab(true);
+            //sleep(400);
+            IntakeMove(0);
+            ArmMoveTo(2900);
+            drive.followTrajectory(AutoPaths.RT_traj02);// drives up to the goal to drop of duck
+            sleep(400);
+            GrabberMove(false, false);
+            sleep(300);
+            drive.followTrajectory(AutoPaths.RT_traj03);// drives to park
+            ArmMove();
+            drive.followTrajectory(AutoPaths.RT_traj4); // drives to the wall
+           // drive.followTrajectory(AutoPaths.RT_traj5); //drives against the wall to line up field centric
 
 
             break;

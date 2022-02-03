@@ -38,7 +38,7 @@ public class BlueLowerAuto extends AutoBasic1
         {
             int aP = 0;
             if(capstonePosition == CapstonePipeline.CapstonePosition.LEFT){
-                aP = initLevel(1); //high
+                aP = initLevel(3); //low
             }
 
             else if(capstonePosition == CapstonePipeline.CapstonePosition.CENTER){
@@ -46,26 +46,45 @@ public class BlueLowerAuto extends AutoBasic1
             }
 
             else if(capstonePosition == CapstonePipeline.CapstonePosition.RIGHT){
-                aP= initLevel(3); //low
+                aP= initLevel(1); //high
             }
 
             initTeam(true);
             setupOpMode();
+            GrabberMove(true, true);
+            initArm();
 
-            GrabberMove(true);
-            drive.followTrajectory(AutoPaths.RT_traj11);
+            drive.followTrajectory(AutoPaths.RT_traj11);// drives little ways forward
             ArmMoveTo(aP);
-            drive.followTrajectory(AutoPaths.RT_traj12);
-            sleep(2000);
-            GrabberMove(false);
-            IntakeMove(-1);
+            sleep(2500);
+            drive.followTrajectory(AutoPaths.RT_traj12);// drive to goal
+            sleep(800);
+            GrabberMove(false, false);
+            sleep(400);
+            drive.followTrajectory(AutoPaths.RT_traj13);// drives away from the goal
+            ArmMoveTo(0);
+            drive.followTrajectory(AutoPaths.RT_traj16);//drives to the ducky wheel
+            drive.followTrajectory(AutoPaths.RT_traj116);
+            DuckyWheelMoveTo(0.35, 1200);
+            IntakeMove(0.63);
+            drive.followTrajectory(AutoPaths.RT_traj17);
+            drive.followTrajectory(AutoPaths.RT_traj18);
+            drive.followTrajectory(AutoPaths.RT_traj115);
+            drive.followTrajectory(AutoPaths.RT_traj19);
+            drive.followTrajectory(AutoPaths.RT_traj111);
+            drive.followTrajectory(AutoPaths.RT_traj112);
+            drive.followTrajectory(AutoPaths.RT_traj113);
+            DuckyGrab(true);
             sleep(500);
             IntakeMove(0);
+            ArmMoveTo(2900);
+            drive.followTrajectory(AutoPaths.RT_traj114);
+            sleep(200);
+            GrabberMove(false, false);
+            sleep(100);
             ArmMoveTo(0);
-            drive.followTrajectory(AutoPaths.RT_traj13);
-            DuckyWheelMoveTo(0.35, 1200);
-            drive.followTrajectory(AutoPaths.RT_traj14);
-            drive.followTrajectory(AutoPaths.RT_traj15);
+            drive.followTrajectory(AutoPaths.RT_traj14); // drives to park
+
 
 
             break;

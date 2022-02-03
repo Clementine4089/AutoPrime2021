@@ -55,52 +55,49 @@ public class RedUpperAuto extends AutoBasic1
             initArm();
 
             /// step 1 ///
-            GrabberMove(true);
+            GrabberMove(true, true);
             drive.followTrajectory(AutoPaths.RT_traj21); //moves slightly towards the goal
             ArmMoveTo(aP); //3150
+            sleep( 1000);
             drive.followTrajectory(AutoPaths.RT_traj22); //moves to the goal ready to place the element
-            sleep(1700);
-            GrabberMove(false);
-            IntakeMove(-1);
-            sleep(500);
-            IntakeMove(0);
-            ArmMoveTo(0);
-            drive.followTrajectory(AutoPaths.RT_traj23); //drives to the wall
-            IntakeMove(1);
+            GrabberMove(false, false);
             sleep(300);
+            drive.followTrajectory(AutoPaths.RT_traj23); //drives to the wall
+            ArmMove();
+            sleep(800);
+            drive.followTrajectory(AutoPaths.RT_traj214);
+            IntakeMove(1);
+            sleep(200);
             drive.followTrajectory(AutoPaths.RT_traj24); //drives to the hub to pick up an element
-            sleep(1800);
+            sleep(800);
             IntakeMove(0);
-            GrabberMove(true);
+            GrabberMove(true, false);
 
             /// step 2 ///
             drive.followTrajectory(AutoPaths.RT_traj25); //drives backwards out of the hub
-            ArmMoveTo(3150);
+            ArmMoveTo(3000);
             drive.followTrajectory(AutoPaths.RT_traj26); //drives to the goal ready to place the element
-            sleep(1200);
-            GrabberMove(false);
-            IntakeMove(-1);
             sleep(500);
-            IntakeMove(0);
-            ArmMoveTo(0);
+            GrabberMove(false, false);
+            sleep(300);
+            ArmMove();
             drive.followTrajectory(AutoPaths.RT_traj27); //drives to the wall
+           // sleep(500);
             IntakeMove(1);
             drive.followTrajectory(AutoPaths.RT_traj28); //drives to the hub ready to pick up an element
-            drive.followTrajectory(AutoPaths.RT_traj213); //drives slower to be ready to pick up element
-            sleep(2000);
+            //drive.followTrajectory(AutoPaths.RT_traj213); //drives slower to be ready to pick up element
+            sleep(600);
             IntakeMove(0);
-            GrabberMove(true);
+            GrabberMove(true,false);
 
             /// step 3 ///
             drive.followTrajectory(AutoPaths.RT_traj29); // drives backwards out of the hub
-            ArmMoveTo(3150);
+            ArmMoveTo(3000);
             drive.followTrajectory(AutoPaths.RT_traj210); // drives to the goal ready to place the element
-            sleep(1200);
-            GrabberMove(false);
-            IntakeMove(-1);
             sleep(500);
-            IntakeMove(0);
-            ArmMoveTo(0);
+            GrabberMove(false,false);
+            sleep(300);
+            ArmMove();
             drive.followTrajectory(AutoPaths.RT_traj211); //drives to the wall
             IntakeMove(1);
             drive.followTrajectory(AutoPaths.RT_traj212); //drives into the hub and parks.

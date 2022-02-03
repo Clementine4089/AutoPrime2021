@@ -32,6 +32,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+        import com.acmerobotics.dashboard.FtcDashboard;
         import com.acmerobotics.dashboard.config.Config;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -78,8 +79,9 @@ public class AutoBasic1 extends LinearOpMode {
 
     private DcMotor motorArm = null;
     private DcMotor motorDuckyWheel = null;
-    private CRServo servoIntake = null;
+    private DcMotor motorIntake = null;
     private Servo servoGrabber = null;
+    private Servo servoRetainer = null;
     private DigitalChannel limitSwitch = null;
 
     private BNO055IMU imu = null;
@@ -102,8 +104,9 @@ public class AutoBasic1 extends LinearOpMode {
 
         motorArm = hardwareMap.dcMotor.get("ArmMotor");
         motorDuckyWheel = hardwareMap.dcMotor.get("DuckyWheelMotor");
-        servoIntake = hardwareMap.get(CRServo.class, "IntakeServo");
+        motorIntake = hardwareMap.dcMotor.get("IntakeMotor");
         servoGrabber = hardwareMap.get(Servo.class, "GrabberServo");
+        servoRetainer = hardwareMap.get(Servo.class, "GrabberServoNew");
 
         limitSwitch = hardwareMap.get(DigitalChannel.class, "LimitSwitch0");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
@@ -131,8 +134,9 @@ public class AutoBasic1 extends LinearOpMode {
 
         motorArm = hardwareMap.dcMotor.get("ArmMotor");
         motorDuckyWheel = hardwareMap.dcMotor.get("DuckyWheelMotor");
-        servoIntake = hardwareMap.get(CRServo.class, "IntakeServo");
+        motorIntake = hardwareMap.dcMotor.get("IntakeMotor");
         servoGrabber = hardwareMap.get(Servo.class, "GrabberServo");
+        servoRetainer = hardwareMap.get(Servo.class, "GrabberServoNew");
 
         limitSwitch = hardwareMap.get(DigitalChannel.class, "LimitSwitch0");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
@@ -146,9 +150,19 @@ public class AutoBasic1 extends LinearOpMode {
     {
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorArm.setTargetPosition(position);
-        motorArm.setPower(0.5);
+        motorArm.setPower(0.8);
         motorArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    public void ArmMove()
+    {
+        while (limitSwitch.getState())
+        {
+                motorArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorArm.setPower(-0.8);
+        }
+        motorArm.setPower(0);
+        motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+}
 
     public void DuckyWheelMoveTo(double speed, double ticks)
     {
@@ -165,35 +179,73 @@ public class AutoBasic1 extends LinearOpMode {
         motorDuckyWheel.setPower(0);
 
     }
-    void GrabberMove(boolean oc)
+    void GrabberMove(boolean oc,boolean start)
     {
         ///////////////// Grabber ////////////////////
-        if (oc)//grabber ungrab
+        if (oc == false)//grabber ungrab
         {
-            servoGrabber.setPosition(0);
+            servoGrabber.setPosition(0.63);
+
         }
-        else //grabber grab
+        if (oc == true) //grapper grap and reverse intake
         {
-            servoGrabber.setPosition(0.2);
+            servoGrabber.setPosition(0.8);
+            servoRetainer.setPosition(0);
+            if(!start)
+            {
+                SpitOut();
+            }
         }
     }
+    void DuckyGrab(boolean grab ){
+        if (grab == false)//grabber ungrab
+        {
+            servoGrabber.setPosition(0.63);
 
-    void IntakeMove(float speed)
+        }
+        if (grab == true) //grapper grap and reverse intake
+        {
+            servoGrabber.setPosition(1);
+            servoRetainer.setPosition(0);
+        }
+    }
+    void SpitOut(){
+        double ticks = 400;
+        double speed = 1;
+        motorIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        boolean positiveDir = ticks > 0;
+        double endTicks = motorIntake.getCurrentPosition() + ticks;
+        while (opModeIsActive() &&
+                ((positiveDir == true && motorIntake.getCurrentPosition() < endTicks) ||
+                        (positiveDir == false && motorIntake.getCurrentPosition() > endTicks))) {
+            ////////////////////// Ducky Wheel ///////////////////////////
+            FtcDashboard.getInstance().getTelemetry().addData("Current Ticks", motorIntake.getCurrentPosition());
+            FtcDashboard.getInstance().getTelemetry().addData("Target Ticks", endTicks);
+            FtcDashboard.getInstance().getTelemetry().update();
+
+            motorIntake.setPower(speed);
+
+        }
+        motorIntake.setPower(0);
+    }
+    void IntakeMove(double speed)
     {
         ////////////////////intake//////////////////////
         if (speed > 0) //Makes intake go forward
         {
-            servoIntake.setPower(-speed);
+            motorIntake.setPower(-speed);
+            servoRetainer.setPosition(0.5);
         }
         else if (speed < 0) //Makes intake go rewerse
         {
-            servoIntake.setPower(-speed);
+            motorIntake.setPower(-speed);
         }
         else// stops intake
         {
-            servoIntake.setPower(0);
+            motorIntake.setPower(0);
         }
     }
+
     void initArm() //for initializing the arm encouders at the beginning of each auto
     {
         motorArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -202,13 +254,13 @@ public class AutoBasic1 extends LinearOpMode {
     {
         int armPos = 0;
         if (level == 3){
-            armPos = 3800;
+            armPos = 3750;
         }
         else if (level == 2){
-            armPos = 3550;
+            armPos = 3450;
         }
         else if (level == 1){
-            armPos = 3200;
+            armPos = 2900;
         }
         else {
             //return testPos;
