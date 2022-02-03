@@ -184,8 +184,9 @@ public class MecanumTeleOp extends LinearOpMode
         {
             ArmMoveTo(3800);
         }
-        if(x){
-            ArmMoveTo(3500);
+        if(x) //arm moves to Mid Level
+        {
+            ArmMoveTo(3400);
         }
         if (manualUp)
         {
